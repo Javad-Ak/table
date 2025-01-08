@@ -4,5 +4,5 @@ project(table C)
 set(CMAKE_C_STANDARD 11)
 
 include_directories(src)
-file(GLOB SOURCES "src/*.c" "src/table/*.c" "src/table/*.h")
+file(GLOB SOURCES "src/*.c" "src/dsa/*.c" "src/dsa/*.h")
 add_executable(${PROJECT_NAME} ${SOURCES})

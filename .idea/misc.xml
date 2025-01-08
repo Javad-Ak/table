@@ -9,7 +9,7 @@
       <file path="$PROJECT_DIR$/src" />
     </sourceRoots>
     <libraryRoots>
-      <file path="$PROJECT_DIR$/src/table" />
+      <file path="$PROJECT_DIR$/src/dsa" />
     </libraryRoots>
   </component>
 </project>
