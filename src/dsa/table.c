@@ -59,7 +59,7 @@ int deleteTable(const char* table_name) {
         prev->next = current->next;
     }
 
-    freeList(current->records);
+    list_free(current->records);
     free(current);
     return SUCCESS;
 }
@@ -70,7 +70,7 @@ int addRecord(const char* table_name, Data data) {
     if (table == NULL) {
         return ERROR_TABLE_NOT_FOUND;
     }
-    return insertAtTail(&table->records, data);
+    return list_insertAtTail(&table->records, data);
 }
 
 // Delete a record
@@ -216,7 +216,7 @@ Node* selectRecords(const char* table_name, const char* column_name, const char*
     Node* head = table->records;
 
     if (sort_flag) {
-        sortList(&head);  // Merge sort by student_number
+        list_sort(&head);  // Merge sort by student_number
     }
 
     return head;
@@ -227,6 +227,6 @@ int printTable(const char* table_name) {
     if (table == NULL) {
         return ERROR_TABLE_NOT_FOUND;
     }
-    printList(table->records);
+    list_print(table->records);
     return SUCCESS;
 }

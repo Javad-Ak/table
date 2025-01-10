@@ -35,12 +35,11 @@ typedef struct Node {
 } Node;
 
 // Function declarations
-Node* createNode(Data data);
-int insertAtHead(Node **head, Data data);
-int insertAtTail(Node **head, Data data);
-int deleteNode(Node **head, Data data);
-int printList(Node *head);
-void freeList(Node *head);
-void sortList(Node **head); // merge sort
+int list_insertAtHead(Node **head, Data data);
+int list_insertAtTail(Node **head, Data data);
+int list_deleteNode(Node **head, Data data);
+int list_print(Node *head);
+void list_free(Node *head);
+void list_sort(Node **head); // merge sort
 
 #endif

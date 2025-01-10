@@ -1,8 +1,10 @@
 # ninja log v6
-11	61	7580666733720802	CMakeFiles/table.dir/src/dsa/tree.c.obj	7710f30ff0b76405
-3	94	7580666733644981	CMakeFiles/table.dir/src/dsa/list.c.obj	550687b16dd5def0
-15	102	7580666733761753	CMakeFiles/table.dir/src/main.c.obj	bb038ed6f2e820ff
-8	113	7580666733686238	CMakeFiles/table.dir/src/dsa/table.c.obj	e3ec61cff816a566
-113	203	7580666734746884	table.exe	5360e11f6eec4450
-23	119	7580675093528489	CMakeFiles/table.dir/src/dsa/table.c.obj	e3ec61cff816a566
-119	220	7580675094499354	table.exe	5360e11f6eec4450
+15	128	7580702845089114	CMakeFiles/table.dir/src/dsa/tree.c.obj	7710f30ff0b76405
+4	111	7580702844985385	CMakeFiles/table.dir/src/dsa/list.c.obj	550687b16dd5def0
+81	358	7582272523761488	CMakeFiles/table.dir/src/main.c.obj	bb038ed6f2e820ff
+10	114	7580702845047710	CMakeFiles/table.dir/src/dsa/table.c.obj	e3ec61cff816a566
+103	197	7580724840969773	table.exe	2b80393af80270e4
+69	355	7582272523645734	CMakeFiles/table.dir/src/dsa/rbtree.c.obj	daa4089c48bf2057
+9	108	7582273511434901	CMakeFiles/table.dir/src/main.c.obj	bb038ed6f2e820ff
+4	109	7582273511382136	CMakeFiles/table.dir/src/dsa/rbtree.c.obj	daa4089c48bf2057
+109	225	7582273512436756	table.exe	2b80393af80270e4

@@ -13,7 +13,7 @@ Node* createNode(Data data) {
 }
 
 // Function to insert a node at the head of the list
-int insertAtHead(Node **head, Data data) {
+int list_insertAtHead(Node **head, Data data) {
     Node* newNode = createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;
@@ -29,7 +29,7 @@ int insertAtHead(Node **head, Data data) {
 }
 
 // Function to insert a node at the tail of the list
-int insertAtTail(Node **head, Data data) {
+int list_insertAtTail(Node **head, Data data) {
     Node* newNode = createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;
@@ -50,7 +50,7 @@ int insertAtTail(Node **head, Data data) {
 }
 
 // Function to delete a node from the list
-int deleteNode(Node **head, Data data) {
+int list_deleteNode(Node **head, Data data) {
     if (*head == NULL) {
         return ERROR_LIST_EMPTY;
     }
@@ -86,7 +86,7 @@ int deleteNode(Node **head, Data data) {
 }
 
 // Function to print the list from head to tail
-int printList(Node *head) {
+int list_print(Node *head) {
     if (head == NULL) {
         return ERROR_LIST_EMPTY;
     }
@@ -105,7 +105,7 @@ int printList(Node *head) {
 }
 
 // Function to free the entire list
-void freeList(Node *head) {
+void list_free(Node *head) {
     while (head != NULL) {
         Node* temp = head;
         head = head->next;
@@ -152,14 +152,14 @@ Node* split(Node* head) {
 }
 
 // Merge Sort the list based on student_number
-void sortList(Node **head) {
+void list_sort(Node **head) {
     if (*head == NULL || (*head)->next == NULL) {
         return;
     }
 
     Node* middle = split(*head);
-    sortList(head);
-    sortList(&middle);
+    list_sort(head);
+    list_sort(&middle);
 
     *head = merge(*head, middle);
 }

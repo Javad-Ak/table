@@ -4,21 +4,23 @@
 
 #include <stdio.h>
 #include "dsa/list.h"
-#include "dsa/tree.h"
+#include "dsa/rbtree.h"
 #include "dsa/table.h"
 
 void testList();
 void testMap();
 void testTree();
 void testTable();
+void testIndex();
 
 int main() {
   printf("AUT-CE DSA Project, Jan 2025, Mohammad Javad Akbari 40231005\n");
 
   printf("\n-------- running test cases...\n");
   testList();
-  testTree();
   testTable();
+  testTree();
+  testIndex();
   printf("\n-------- all tests done.\n");
 
   return 0;
@@ -33,14 +35,14 @@ void testList() {
   Data data3 = {1003, "History103", "Dr. Green", 15, "CS103", "Prof. Peter", 14};
   Data data4 = {1004, "Biology104", "Dr. Blue", 20, "CS104", "Prof. Alice", 16};
 
-  insertAtHead(&head, data1);
-  insertAtHead(&head, data2);
-  insertAtTail(&head, data3);
-  insertAtTail(&head, data4);
+  list_insertAtHead(&head, data1);
+  list_insertAtHead(&head, data2);
+  list_insertAtTail(&head, data3);
+  list_insertAtTail(&head, data4);
 
-  sortList(&head);
-  printList(head);
-  freeList(head);
+  list_sort(&head);
+  list_print(head);
+  list_free(head);
 }
 
 void testTable() {
@@ -72,6 +74,27 @@ void testTable() {
 
 void testTree() {
   printf("\n---- Testing Tree...\n");
-  printf("test\n");
+
+  RBTreeNode *root = NULL;
+
+  // Insert some nodes into the Red-Black Tree
+  insert(&root, 10);
+  insert(&root, 20);
+  insert(&root, 30);
+  insert(&root, 15);
+  insert(&root, 25);
+
+  printf("Inorder Traversal of the Red-Black Tree:\n");
+  inorderTraversal(root);
+
+  // Delete a node
+  delete(&root, 15);
+
+  printf("\nInorder Traversal after deletion:\n");
+  inorderTraversal(root);
 }
 
+void testIndex() {
+  printf("\n---- Testing Table Index...\n");
+  printf("test\n");
+}
