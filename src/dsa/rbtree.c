@@ -1,9 +1,10 @@
 #include "rbtree.h"
 
 // Function to create a new node
-RBTreeNode* tree_createNode(int key) {
+RBTreeNode* tree_createNode(Data data) {
     RBTreeNode *newNode = (RBTreeNode*)malloc(sizeof(RBTreeNode));
-    newNode->key = key;
+    newNode->key = data.student_number;
+    newNode->data = data;
     newNode->color = RED;  // new nodes are always red
     newNode->left = newNode->right = newNode->parent = NULL;
     return newNode;
@@ -49,7 +50,7 @@ void leftRotate(RBTreeNode **root, RBTreeNode *x) {
     x->parent = y;
 }
 
-// Fix violations after insertion
+// Fix after insertion
 void fixInsert(RBTreeNode **root, RBTreeNode *z) {
     while (z->parent != NULL && z->parent->color == RED) {
         if (z->parent == z->parent->parent->left) {
@@ -96,12 +97,12 @@ void fixInsert(RBTreeNode **root, RBTreeNode *z) {
 }
 
 // Insert a new node with the given key
-void insert(RBTreeNode **root, int key) {
-    RBTreeNode *z = tree_createNode(key);
+void tree_insert(RBTreeNode **root, Data data) {
+    int key = data.student_number;
+    RBTreeNode *z = tree_createNode(data);
     RBTreeNode *y = NULL;
     RBTreeNode *x = *root;
 
-    // Perform a regular BST insert
     while (x != NULL) {
         y = x;
         if (key < x->key)
@@ -112,13 +113,12 @@ void insert(RBTreeNode **root, int key) {
 
     z->parent = y;
     if (y == NULL)
-        *root = z;  // Tree was empty
+        *root = z;
     else if (key < y->key)
         y->left = z;
     else
         y->right = z;
 
-    // Fix any violations
     fixInsert(root, z);
 }
 
@@ -135,8 +135,83 @@ void transplant(RBTreeNode **root, RBTreeNode *u, RBTreeNode *v) {
         v->parent = u->parent;
 }
 
+// Fix after deletion
+void fixDelete(RBTreeNode **root, RBTreeNode *x) {
+    while (x != *root && (x == NULL || x->color == BLACK)) {
+        if (x == NULL || x->parent == NULL) {
+            break;
+        }
+
+        if (x == x->parent->left) {
+            RBTreeNode *w = x->parent->right;
+
+            // Case 1: Sibling is RED
+            if (w != NULL && w->color == RED) {
+                w->color = BLACK;
+                x->parent->color = RED;
+                leftRotate(root, x->parent);
+                w = x->parent->right;
+            }
+
+            // Case 2: Sibling and its children are BLACK
+            if ((w == NULL || w->left == NULL || w->left->color == BLACK) &&
+                (w == NULL || w->right == NULL || w->right->color == BLACK)) {
+                if (w != NULL) w->color = RED;
+                x = x->parent;
+            } else {
+                // Case 3: Sibling's right child is BLACK
+                if (w != NULL && (w->right == NULL || w->right->color == BLACK)) {
+                    if (w->left != NULL) w->left->color = BLACK;
+                    if (w != NULL) w->color = RED;
+                    rightRotate(root, w);
+                    w = x->parent->right;
+                }
+
+                // Case 4: Sibling's right child is RED
+                if (w != NULL) w->color = x->parent->color;
+                x->parent->color = BLACK;
+                if (w != NULL && w->right != NULL) w->right->color = BLACK;
+                leftRotate(root, x->parent);
+                x = *root;
+            }
+        } else {
+            // Symmetric cases
+            RBTreeNode *w = x->parent->left;
+
+            if (w != NULL && w->color == RED) {
+                w->color = BLACK;
+                x->parent->color = RED;
+                rightRotate(root, x->parent);
+                w = x->parent->left;
+            }
+
+            if ((w == NULL || w->right == NULL || w->right->color == BLACK) &&
+                (w == NULL || w->left == NULL || w->left->color == BLACK)) {
+                if (w != NULL) w->color = RED;
+                x = x->parent;
+            } else {
+                if (w != NULL && (w->left == NULL || w->left->color == BLACK)) {
+                    if (w->right != NULL) w->right->color = BLACK;
+                    if (w != NULL) w->color = RED;
+                    leftRotate(root, w);
+                    w = x->parent->left;
+                }
+
+                if (w != NULL) w->color = x->parent->color;
+                x->parent->color = BLACK;
+                if (w != NULL && w->left != NULL) w->left->color = BLACK;
+                rightRotate(root, x->parent);
+                x = *root;
+            }
+        }
+    }
+
+    if (x != NULL) x->color = BLACK;
+}
+
+
 // Delete a node with the given key
-void delete(RBTreeNode **root, int key) {
+void tree_delete(RBTreeNode **root, int key) {
     RBTreeNode *z = *root;
     RBTreeNode *x, *y;
 
@@ -186,74 +261,29 @@ void delete(RBTreeNode **root, int key) {
         fixDelete(root, x);
 }
 
-// Fix violations after deletion
-void fixDelete(RBTreeNode **root, RBTreeNode *x) {
-    while (x != *root && (x == NULL || x->color == BLACK)) {
-        if (x == x->parent->left) {
-            RBTreeNode *w = x->parent->right;
-            if (w->color == RED) {
-                w->color = BLACK;
-                x->parent->color = RED;
-                leftRotate(root, x->parent);
-                w = x->parent->right;
-            }
-            if ((w->left == NULL || w->left->color == BLACK) &&
-                (w->right == NULL || w->right->color == BLACK)) {
-                w->color = RED;
-                x = x->parent;
-            } else {
-                if (w->right == NULL || w->right->color == BLACK) {
-                    if (w->left != NULL)
-                        w->left->color = BLACK;
-                    w->color = RED;
-                    rightRotate(root, w);
-                    w = x->parent->right;
-                }
-                w->color = x->parent->color;
-                x->parent->color = BLACK;
-                if (w->right != NULL)
-                    w->right->color = BLACK;
-                leftRotate(root, x->parent);
-                x = *root;
-            }
-        } else {
-            RBTreeNode *w = x->parent->left;
-            if (w->color == RED) {
-                w->color = BLACK;
-                x->parent->color = RED;
-                rightRotate(root, x->parent);
-                w = x->parent->left;
-            }
-            if ((w->right == NULL || w->right->color == BLACK) &&
-                (w->left == NULL || w->left->color == BLACK)) {
-                w->color = RED;
-                x = x->parent;
-            } else {
-                if (w->left == NULL || w->left->color == BLACK) {
-                    if (w->right != NULL)
-                        w->right->color = BLACK;
-                    w->color = RED;
-                    leftRotate(root, w);
-                    w = x->parent->left;
-                }
-                w->color = x->parent->color;
-                x->parent->color = BLACK;
-                if (w->left != NULL)
-                    w->left->color = BLACK;
-                rightRotate(root, x->parent);
-                x = *root;
-            }
-        }
+// Function to print the tree (in-order traversal)
+void tree_inorderPrint(RBTreeNode *root) {
+    RBTreeNode* temp = root;
+    if (temp != NULL) {
+        tree_inorderPrint(temp->left);
+
+        printf("Student Number: %d\n", temp->data.student_number);
+        printf("General Course Name: %s, Instructor: %s, Score: %d\n",
+               temp->data.general_course_name, temp->data.general_course_instructor, temp->data.general_course_score);
+        printf("Core Course Name: %s, Instructor: %s, Score: %d\n",
+               temp->data.core_course_name, temp->data.core_course_instructor, temp->data.core_course_score);
+        printf("\n");
+
+        tree_inorderPrint(temp->right);
     }
-    if (x != NULL)
-        x->color = BLACK;
 }
 
-// Function to print the tree (in-order traversal)
-void inorderTraversal(RBTreeNode *root) {
-    if (root != NULL) {
-        inorderTraversal(root->left);
-        printf("%d (%s)\n", root->key, root->color == RED ? "RED" : "BLACK");
-        inorderTraversal(root->right);
-    }
+// Recursive function to free all nodes of the tree
+void tree_free(RBTreeNode* root) {
+    if (root == NULL) return;
+
+    tree_free(root->left);
+    tree_free(root->right);
+
+    free(root);
 }

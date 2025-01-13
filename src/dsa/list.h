@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 // Error literals
 #define SUCCESS 0
@@ -28,18 +29,22 @@ typedef struct Data {
 } Data;
 
 // Define the structure for a doubly linked list node
-typedef struct Node {
+typedef struct List_Node {
     Data data;
-    struct Node *prev;
-    struct Node *next;
-} Node;
+    struct List_Node *prev;
+    struct List_Node *next;
+} List_Node;
 
 // Function declarations
-int list_insertAtHead(Node **head, Data data);
-int list_insertAtTail(Node **head, Data data);
-int list_deleteNode(Node **head, Data data);
-int list_print(Node *head);
-void list_free(Node *head);
-void list_sort(Node **head); // merge sort
+int list_insertAtHead(List_Node **head, Data data);
+int list_insertAtTail(List_Node **head, Data data);
+int list_deleteNode(List_Node **head, int key);
+int list_print(List_Node *head);
+void list_free(List_Node *head);
+void list_sort(List_Node **head);
+
+List_Node* list_select(List_Node* head, const char* column_name, const char* value, bool sort_flag);
+int list_update(List_Node* head, const char* column_name, const char* value, const char* new_value);
+int list_delete(List_Node** head, const char* column_name, const char* value);
 
 #endif

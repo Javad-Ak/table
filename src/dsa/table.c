@@ -73,153 +73,31 @@ int addRecord(const char* table_name, Data data) {
     return list_insertAtTail(&table->records, data);
 }
 
-// Delete a record
+// Delete records
 int deleteRecord(const char* table_name, const char* column_name, const char* value) {
     Table* table = getTableByName(table_name);
     if (table == NULL) return ERROR_TABLE_NOT_FOUND;
-
-    Node* current = table->records;
-    int deleted = 0;
-
-    while (current != NULL) {
-        int shouldDelete = 0;
-
-        if (strcmp(column_name, "student_number") == 0) {
-            if (current->data.student_number == strtol(value, NULL, 10)) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "general_course_name") == 0) {
-            if (strcmp(current->data.general_course_name, value) == 0) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "general_course_instructor") == 0) {
-            if (strcmp(current->data.general_course_instructor, value) == 0) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "general_course_score") == 0) {
-            if (current->data.general_course_score == strtol(value, NULL, 10)) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "core_course_name") == 0) {
-            if (strcmp(current->data.core_course_name, value) == 0) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "core_course_instructor") == 0) {
-            if (strcmp(current->data.core_course_instructor, value) == 0) {
-                shouldDelete = 1;
-            }
-        } else if (strcmp(column_name, "core_course_score") == 0) {
-            if (current->data.core_course_score == strtol(value, NULL, 10)) {
-                shouldDelete = 1;
-            }
-        }
-
-        if (shouldDelete) {
-            if (current->prev) current->prev->next = current->next;
-            if (current->next) current->next->prev = current->prev;
-
-            if (current == table->records) {
-                table->records = current->next;
-            }
-
-            Node* temp = current;
-            current = current->next;
-            free(temp);
-
-            deleted = 1;
-        } else {
-            current = current->next;
-        }
-    }
-
-    return deleted ? SUCCESS : ERROR_RECORD_NOT_FOUND;
+    return list_delete(&(table->records), column_name, value);
 }
 
-// Update a record
+// Update records
 int updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value) {
     Table* table = getTableByName(table_name);
     if (table == NULL) return -1;
 
-    Node* current = table->records;
-    int updated = 0;
-
-    while (current != NULL) {
-        int shouldUpdate = 0;
-
-        if (strcmp(column_name, "student_number") == 0) {
-            if (current->data.student_number == strtol(value, NULL, 10)) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "general_course_name") == 0) {
-            if (strcmp(current->data.general_course_name, value) == 0) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "general_course_instructor") == 0) {
-            if (strcmp(current->data.general_course_instructor, value) == 0) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "general_course_score") == 0) {
-            if (current->data.general_course_score == strtol(value, NULL, 10)) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "core_course_name") == 0) {
-            if (strcmp(current->data.core_course_name, value) == 0) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "core_course_instructor") == 0) {
-            if (strcmp(current->data.core_course_instructor, value) == 0) {
-                shouldUpdate = 1;
-            }
-        } else if (strcmp(column_name, "core_course_score") == 0) {
-            if (current->data.core_course_score == strtol(value, NULL, 10)) {
-                shouldUpdate = 1;
-            }
-        }
-
-        if (shouldUpdate) {
-            if (strcmp(column_name, "student_number") == 0) {
-                current->data.student_number = strtol(new_value, NULL, 10);
-            } else if (strcmp(column_name, "general_course_name") == 0) {
-                strncpy(current->data.general_course_name, new_value, sizeof(current->data.general_course_name) - 1);
-                current->data.general_course_name[sizeof(current->data.general_course_name) - 1] = '\0';
-            } else if (strcmp(column_name, "general_course_instructor") == 0) {
-                strncpy(current->data.general_course_instructor, new_value, sizeof(current->data.general_course_instructor) - 1);
-                current->data.general_course_instructor[sizeof(current->data.general_course_instructor) - 1] = '\0';
-            } else if (strcmp(column_name, "general_course_score") == 0) {
-                current->data.general_course_score = strtol(new_value, NULL, 10);
-            } else if (strcmp(column_name, "core_course_name") == 0) {
-                strncpy(current->data.core_course_name, new_value, sizeof(current->data.core_course_name) - 1);
-                current->data.core_course_name[sizeof(current->data.core_course_name) - 1] = '\0';
-            } else if (strcmp(column_name, "core_course_instructor") == 0) {
-                strncpy(current->data.core_course_instructor, new_value, sizeof(current->data.core_course_instructor) - 1);
-                current->data.core_course_instructor[sizeof(current->data.core_course_instructor) - 1] = '\0';
-            } else if (strcmp(column_name, "core_course_score") == 0) {
-                current->data.core_course_score = strtol(new_value, NULL, 10);
-            }
-
-            updated = 1;
-        }
-
-        current = current->next;
-    }
-
-    return updated ? SUCCESS : ERROR_RECORD_NOT_FOUND;
+    List_Node* current = table->records;
+    return list_update(current, column_name, value, new_value);
 }
 
 // Select records
-Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag) {
+List_Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag) {
     Table* table = getTableByName(table_name);
     if (table == NULL) {
         return NULL;
     }
 
-    Node* head = table->records;
-
-    if (sort_flag) {
-        list_sort(&head);  // Merge sort by student_number
-    }
-
-    return head;
+    List_Node* head = table->records;
+    return list_select(head, column_name, value, sort_flag);
 }
 
 int printTable(const char* table_name) {

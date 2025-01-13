@@ -23,9 +23,10 @@
 
 // Table structure
 typedef struct Table {
-    char name[MAX_TABLE_NAME_LEN]; // Table name
-    Node* records;                 // Doubly linked list
-    struct Table* next;            // Hashmap chaining
+    char name[MAX_TABLE_NAME_LEN];
+    List_Node* records;
+
+    struct Table* next;
 } Table;
 
 // Function declarations
@@ -35,6 +36,6 @@ int addRecord(const char* table_name, Data data);
 int deleteRecord(const char* table_name, const char* column_name, const char* value);
 int updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value);
 int printTable(const char* table_name);
-Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag);
+List_Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag);
 
 #endif

@@ -29,11 +29,11 @@ int main() {
 void testList() {
   printf("\n---- Testing list...\n");
 
-  Node* head = NULL;
-  Data data1 = {1001, "Math101", "Dr. Smith", 18, "CS101", "Prof. John", 17};
-  Data data2 = {1002, "English102", "Dr. White", 16, "CS102", "Prof. Mary", 19};
-  Data data3 = {1003, "History103", "Dr. Green", 15, "CS103", "Prof. Peter", 14};
-  Data data4 = {1004, "Biology104", "Dr. Blue", 20, "CS104", "Prof. Alice", 16};
+  List_Node* head = NULL;
+  Data data1 = {4000, "Math101", "Dr. Smith", 18, "CS101", "Prof. John", 17};
+  Data data2 = {3000, "English102", "Dr. White", 16, "CS102", "Prof. Mary", 19};
+  Data data3 = {2000, "History103", "Dr. Green", 15, "CS103", "Prof. Peter", 14};
+  Data data4 = {1000, "Biology104", "Dr. Blue", 20, "CS104", "Prof. Alice", 16};
 
   list_insertAtHead(&head, data1);
   list_insertAtHead(&head, data2);
@@ -46,52 +46,48 @@ void testList() {
 }
 
 void testTable() {
-  printf("\n---- Testing Table...\n");
+  printf("---- Testing Table...\n");
 
   createTable("t1");
-  createTable("t2");
 
   Data data1 = {1001, "Math101", "Dr. Akbari", 18, "DS101", "Prof. Bagheri", 17};
   Data data2 = {1002, "English102", "Dr. Bayati", 16, "DS102", "Prof. Shahreza", 19};
-  addRecord("t1", data1);
-  addRecord("t1", data2);
-
   Data data3 = {2001, "Math101", "Dr. Smith", 18, "DS101", "Prof. John", 17};
   Data data4 = {2002, "English102", "Dr. White", 16, "DS102", "Prof. Mary", 19};
-  addRecord("t2", data3);
-  addRecord("t2", data4);
 
-  updateRecord("t1", "student_number", "1002", "1010");
+  addRecord("t1", data1);
+  addRecord("t1", data2);
+  addRecord("t1", data3);
+  addRecord("t1", data4);
+
   deleteRecord("t1", "student_number", "1001");
+  updateRecord("t1", "student_number", "1002", "5000");
+  List_Node* sel = selectRecords("t1","student_number","2001", true);
 
   printTable("t1");
-  printTable("t2");
+  printf("###\n\n");
+  list_print(sel);
 
-  // Delete tables t1 and t2
-  deleteTable("t2");
   deleteTable("t1");
 }
 
 void testTree() {
-  printf("\n---- Testing Tree...\n");
+  printf("---- Testing Tree...\n");
+
+  Data data1 = {4000, "Math101", "Dr. Akbari", 18, "DS101", "Prof. Bagheri", 17};
+  Data data2 = {3000, "English102", "Dr. Bayati", 16, "DS102", "Prof. Shahreza", 19};
+  Data data3 = {2000, "Math101", "Dr. Smith", 18, "DS101", "Prof. John", 17};
+  Data data4 = {1000, "English102", "Dr. White", 16, "DS102", "Prof. Mary", 19};
 
   RBTreeNode *root = NULL;
 
-  // Insert some nodes into the Red-Black Tree
-  insert(&root, 10);
-  insert(&root, 20);
-  insert(&root, 30);
-  insert(&root, 15);
-  insert(&root, 25);
+  tree_insert(&root, data1);
+  tree_insert(&root, data2);
+  tree_insert(&root, data3);
+  tree_insert(&root, data4);
+  tree_delete(&root, 4000);
 
-  printf("Inorder Traversal of the Red-Black Tree:\n");
-  inorderTraversal(root);
-
-  // Delete a node
-  delete(&root, 15);
-
-  printf("\nInorder Traversal after deletion:\n");
-  inorderTraversal(root);
+  tree_inorderPrint(root);
 }
 
 void testIndex() {
