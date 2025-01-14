@@ -17,8 +17,8 @@ int main() {
   printf("AUT-CE DSA Project, Jan 2025, Mohammad Javad Akbari 40231005\n");
 
   printf("\n-------- running test cases...\n");
-  // testList();
-  // testTree();
+  testList();
+  testTree();
   testTable();
   testIndex();
   printf("\n-------- all tests done.\n");
@@ -94,6 +94,7 @@ void testIndex() {
   printf("\n---- Testing Table Index...\n");
 
   table_create("t1");
+  table_create("t2");
 
   Data data1 = {1001, "Math101", "Dr. Akbari", 18, "DS101", "Prof. Bagheri", 17};
   Data data2 = {1002, "English102", "Dr. Bayati", 16, "DS102", "Prof. Shahreza", 19};
@@ -105,13 +106,29 @@ void testIndex() {
   table_addRecord("t1", data3);
   table_addRecord("t1", data4);
 
+  table_addRecord("t2", data1);
+  table_addRecord("t2", data2);
+  table_addRecord("t2", data3);
+  table_addRecord("t2", data4);
+
   table_createIndex("t1");
+  table_createIndex("t2");
 
   table_deleteRecord("t1", "student_number", "1001");
   table_updateRecord("t1", "student_number", "1002", "5000");
-  List_Node* sel = table_selectRecords("t1","student_number","2001", true);
+  List_Node* sel = table_selectRecords("t1","student_number","5000", true);
 
+  printf("###t1\n");
   table_print("t1", true);
+  printf("###\n\n");
+  list_print(sel);
+
+  table_deleteRecord("t2", "student_number", "1001");
+  table_updateRecord("t2", "student_number", "1002", "5000");
+  sel = table_selectRecords("t1","general_course_name","English102", true);
+
+  printf("###t2\n");
+  table_print("t2", true);
   printf("###\n\n");
   list_print(sel);
 
