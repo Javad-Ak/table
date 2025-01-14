@@ -296,9 +296,9 @@ int tree_update(RBTreeNode** root, int key, Data new_data) {
 
     RBTreeNode* p = *root;
     if (key < p->key) {
-        return tree_update(p->left, key, new_data);
+        return tree_update(&p->left, key, new_data);
     } else if (key > p->key) {
-        return tree_update(p->right, key, new_data);
+        return tree_update(&p->right, key, new_data);
     } else {
         tree_delete(root, key);
         tree_insert(root, new_data);
