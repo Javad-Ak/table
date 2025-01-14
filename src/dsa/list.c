@@ -1,11 +1,10 @@
 #include "list.h"
 
 // Function to create a new node
-List_Node* createNode(Data data) {
+List_Node* list_createNode(Data data) {
     List_Node* newNode = (List_Node*)malloc(sizeof(List_Node));
-    if (newNode == NULL) {
-        return NULL; // Return NULL on memory allocation failure
-    }
+    if (newNode == NULL) return NULL;
+
     newNode->data = data;
     newNode->prev = NULL;
     newNode->next = NULL;
@@ -14,7 +13,7 @@ List_Node* createNode(Data data) {
 
 // Function to insert a node at the head of the list
 int list_insertAtHead(List_Node **head, Data data) {
-    List_Node* newNode = createNode(data);
+    List_Node* newNode = list_createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;
     }
@@ -30,7 +29,7 @@ int list_insertAtHead(List_Node **head, Data data) {
 
 // Function to insert a node at the tail of the list
 int list_insertAtTail(List_Node **head, Data data) {
-    List_Node* newNode = createNode(data);
+    List_Node* newNode = list_createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;
     }

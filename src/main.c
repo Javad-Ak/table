@@ -17,9 +17,9 @@ int main() {
   printf("AUT-CE DSA Project, Jan 2025, Mohammad Javad Akbari 40231005\n");
 
   printf("\n-------- running test cases...\n");
-  testList();
+  // testList();
+  // testTree();
   testTable();
-  testTree();
   testIndex();
   printf("\n-------- all tests done.\n");
 
@@ -48,27 +48,27 @@ void testList() {
 void testTable() {
   printf("---- Testing Table...\n");
 
-  createTable("t1");
+  table_create("t1");
 
   Data data1 = {1001, "Math101", "Dr. Akbari", 18, "DS101", "Prof. Bagheri", 17};
   Data data2 = {1002, "English102", "Dr. Bayati", 16, "DS102", "Prof. Shahreza", 19};
   Data data3 = {2001, "Math101", "Dr. Smith", 18, "DS101", "Prof. John", 17};
   Data data4 = {2002, "English102", "Dr. White", 16, "DS102", "Prof. Mary", 19};
 
-  addRecord("t1", data1);
-  addRecord("t1", data2);
-  addRecord("t1", data3);
-  addRecord("t1", data4);
+  table_addRecord("t1", data1);
+  table_addRecord("t1", data2);
+  table_addRecord("t1", data3);
+  table_addRecord("t1", data4);
 
-  deleteRecord("t1", "student_number", "1001");
-  updateRecord("t1", "student_number", "1002", "5000");
-  List_Node* sel = selectRecords("t1","student_number","2001", true);
+  table_deleteRecord("t1", "student_number", "1001");
+  table_updateRecord("t1", "student_number", "1002", "5000");
+  List_Node* sel = table_selectRecords("t1","student_number","2001", true);
 
-  printTable("t1");
+  table_print("t1", true);
   printf("###\n\n");
   list_print(sel);
 
-  deleteTable("t1");
+  table_delete("t1");
 }
 
 void testTree() {
@@ -92,5 +92,28 @@ void testTree() {
 
 void testIndex() {
   printf("\n---- Testing Table Index...\n");
-  printf("test\n");
+
+  table_create("t1");
+
+  Data data1 = {1001, "Math101", "Dr. Akbari", 18, "DS101", "Prof. Bagheri", 17};
+  Data data2 = {1002, "English102", "Dr. Bayati", 16, "DS102", "Prof. Shahreza", 19};
+  Data data3 = {2001, "Math101", "Dr. Smith", 18, "DS101", "Prof. John", 17};
+  Data data4 = {2002, "English102", "Dr. White", 16, "DS102", "Prof. Mary", 19};
+
+  table_addRecord("t1", data1);
+  table_addRecord("t1", data2);
+  table_addRecord("t1", data3);
+  table_addRecord("t1", data4);
+
+  table_createIndex("t1");
+
+  table_deleteRecord("t1", "student_number", "1001");
+  table_updateRecord("t1", "student_number", "1002", "5000");
+  List_Node* sel = table_selectRecords("t1","student_number","2001", true);
+
+  table_print("t1", true);
+  printf("###\n\n");
+  list_print(sel);
+
+  table_delete("t1");
 }

@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "rbtree.h"
+
 #define MAX_TABLE_NAME_LEN 64
 #define TABLE_HASH_SIZE 100
 
@@ -24,18 +26,22 @@
 // Table structure
 typedef struct Table {
     char name[MAX_TABLE_NAME_LEN];
+    bool isIndexed;
+
     List_Node* records;
+    RBTreeNode* index;
 
     struct Table* next;
 } Table;
 
 // Function declarations
-int createTable(const char* table_name);
-int deleteTable(const char* table_name);
-int addRecord(const char* table_name, Data data);
-int deleteRecord(const char* table_name, const char* column_name, const char* value);
-int updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value);
-int printTable(const char* table_name);
-List_Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag);
+int table_create(const char* table_name);
+int table_delete(const char* table_name);
+int table_addRecord(const char* table_name, Data data);
+int table_deleteRecord(const char* table_name, const char* column_name, const char* value);
+int table_updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value);
+int table_print(const char* table_name, bool sort_flag);
+void table_createIndex(const char* table_name);
+List_Node* table_selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag);
 
 #endif

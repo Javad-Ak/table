@@ -36,6 +36,7 @@ typedef struct List_Node {
 } List_Node;
 
 // Function declarations
+List_Node* list_createNode(Data data);
 int list_insertAtHead(List_Node **head, Data data);
 int list_insertAtTail(List_Node **head, Data data);
 int list_deleteNode(List_Node **head, int key);

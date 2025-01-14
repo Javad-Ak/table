@@ -3,6 +3,8 @@
 // Function to create a new node
 RBTreeNode* tree_createNode(Data data) {
     RBTreeNode *newNode = (RBTreeNode*)malloc(sizeof(RBTreeNode));
+    if (newNode == NULL) return NULL;
+
     newNode->key = data.student_number;
     newNode->data = data;
     newNode->color = RED;  // new nodes are always red
@@ -287,3 +289,34 @@ void tree_free(RBTreeNode* root) {
 
     free(root);
 }
+
+// update a node
+int tree_update(RBTreeNode** root, int key, Data new_data) {
+    if (!root) return NOT_FOUND;
+
+    RBTreeNode* p = *root;
+    if (key < p->key) {
+        return tree_update(p->left, key, new_data);
+    } else if (key > p->key) {
+        return tree_update(p->right, key, new_data);
+    } else {
+        tree_delete(root, key);
+        tree_insert(root, new_data);
+        return SUCCESS;
+    }
+}
+
+// find a node
+RBTreeNode* tree_find(RBTreeNode* root, int key) {
+    if (!root) return NULL;
+
+
+    if (key < root->key) {
+        return tree_find(root->left, key);
+    } else if (key > root->key) {
+        return tree_find(root->right, key);
+    } else {
+        return root;
+    }
+}
+

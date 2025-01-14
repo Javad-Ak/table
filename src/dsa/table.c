@@ -27,7 +27,7 @@ static Table* getTableByName(const char* table_name) {
 }
 
 // Create a new table
-int createTable(const char* table_name) {
+int table_create(const char* table_name) {
     unsigned int index = hashTableName(table_name);
     Table* new_table = malloc(sizeof(Table));
     if (new_table == NULL) {
@@ -40,8 +40,52 @@ int createTable(const char* table_name) {
     return SUCCESS;
 }
 
+// Create Index based on key
+void createIndex(Table* table) {
+    if (!table || table->isIndexed) return;
+
+    RBTreeNode* new_tree = NULL;
+
+    List_Node* current = table->records;
+    while (current) {
+        tree_insert(&new_tree, current->data);
+        current = current->next;
+    }
+
+    table->index = new_tree;
+    table->isIndexed = true;
+
+    list_free(table->records);
+    table->records = NULL;
+}
+
+// Create Index based on key
+void table_createIndex(const char* table_name) {
+    createIndex(getTableByName(table_name));
+}
+
+// Fill records from index
+void fillListFromTree(RBTreeNode* node, List_Node** records) {
+    if (!node) return;
+
+    fillListFromTree(node->left, records);
+    list_insertAtTail(records, node->data);
+    fillListFromTree(node->right, records);
+}
+
+// Delete Index
+void deleteIndex(Table* table) {
+    if (!table || !table->index) return;
+
+    fillListFromTree(table->index, &table->records);
+
+    tree_free(table->index);
+    table->index = NULL;
+    table->isIndexed = false;
+}
+
 // Delete a table
-int deleteTable(const char* table_name) {
+int table_delete(const char* table_name) {
     unsigned int index = hashTableName(table_name);
     Table* current = table_hashmap[index];
     Table* prev = NULL;
@@ -59,52 +103,98 @@ int deleteTable(const char* table_name) {
         prev->next = current->next;
     }
 
-    list_free(current->records);
+    if (current->isIndexed)
+        tree_free(current->index);
+    else
+        list_free(current->records);
+
     free(current);
     return SUCCESS;
 }
 
 // Add a new record
-int addRecord(const char* table_name, Data data) {
+int table_addRecord(const char* table_name, Data data) {
     Table* table = getTableByName(table_name);
     if (table == NULL) {
         return ERROR_TABLE_NOT_FOUND;
     }
-    return list_insertAtTail(&table->records, data);
+
+    if (table->isIndexed) {
+        tree_insert(&table->index, data);
+        return SUCCESS;
+    } else {
+        return list_insertAtTail(&table->records, data);
+    }
 }
 
 // Delete records
-int deleteRecord(const char* table_name, const char* column_name, const char* value) {
+int table_deleteRecord(const char* table_name, const char* column_name, const char* value) {
     Table* table = getTableByName(table_name);
     if (table == NULL) return ERROR_TABLE_NOT_FOUND;
+
+    if (table->isIndexed && strcmp("student_number", column_name) == 0) {
+        tree_delete(&table->index, strtol(value, NULL, 10));
+        return SUCCESS;
+    } else if (table->isIndexed) {
+        deleteIndex(table);
+    }
+
     return list_delete(&(table->records), column_name, value);
 }
 
 // Update records
-int updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value) {
+int table_updateRecord(const char* table_name, const char* column_name, const char* value, const char* new_value) {
     Table* table = getTableByName(table_name);
     if (table == NULL) return -1;
+
+    if (table->isIndexed && strcmp("student_number", column_name) == 0) {
+        int key = strtol(value, NULL, 10);
+        int newKey = strtol(new_value, NULL, 10);
+
+        RBTreeNode* node = tree_find(table->index, key);
+        if (node == NULL) return ERROR_RECORD_NOT_FOUND;
+        node->data.student_number = newKey;
+
+        tree_update(&table->index, key, node->data);
+        return SUCCESS;
+    } else if (table->isIndexed) {
+        deleteIndex(table);
+    }
 
     List_Node* current = table->records;
     return list_update(current, column_name, value, new_value);
 }
 
 // Select records
-List_Node* selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag) {
+List_Node* table_selectRecords(const char* table_name, const char* column_name, const char* value, bool sort_flag) {
     Table* table = getTableByName(table_name);
     if (table == NULL) {
         return NULL;
+    }
+
+    if (table->isIndexed && strcmp("student_number", column_name) == 0) {
+        RBTreeNode* node = tree_find(table->index, strtol(value, NULL, 10));
+        return list_createNode(node->data);
+    } else if (table->isIndexed) {
+        deleteIndex(table);
     }
 
     List_Node* head = table->records;
     return list_select(head, column_name, value, sort_flag);
 }
 
-int printTable(const char* table_name) {
+int table_print(const char* table_name, bool sort_flag) {
     Table* table = getTableByName(table_name);
     if (table == NULL) {
         return ERROR_TABLE_NOT_FOUND;
     }
-    list_print(table->records);
+
+    if (table->isIndexed) {
+        tree_inorderPrint(table->index);
+    } else {
+        if (sort_flag) list_sort(&table->records);
+        list_print(table->records);
+    }
     return SUCCESS;
 }
+
