@@ -34,11 +34,13 @@ void testList() {
   Data data2 = {3000, "English102", "Dr. White", 16, "CS102", "Prof. Mary", 19};
   Data data3 = {2000, "History103", "Dr. Green", 15, "CS103", "Prof. Peter", 14};
   Data data4 = {1000, "Biology104", "Dr. Blue", 20, "CS104", "Prof. Alice", 16};
+  Data data5 = {1000, "Biology104", "Dr. Blue", 20, "CS104", "Prof. Alice", 16};
 
   list_insertAtHead(&head, data1);
   list_insertAtHead(&head, data2);
   list_insertAtTail(&head, data3);
   list_insertAtTail(&head, data4);
+  list_insertAtTail(&head, data5);
 
   list_sort(&head);
   list_print(head);

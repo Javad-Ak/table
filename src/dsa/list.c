@@ -11,9 +11,25 @@ List_Node* list_createNode(Data data) {
     return newNode;
 }
 
-// Function to insert a node at the head of the list
+// Function to check duplicate primary key
+bool list_studentNumberExists(List_Node *head, int student_number) {
+    List_Node *current = head;
+    while (current != NULL) {
+        if (current->data.student_number == student_number) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+// Function to insert a node at the head of the list without duplicates
 int list_insertAtHead(List_Node **head, Data data) {
-    List_Node* newNode = list_createNode(data);
+    if (list_studentNumberExists(*head, data.student_number)) {
+        return ERROR_DUPLICATE_STUDENT_NUMBER;
+    }
+
+    List_Node *newNode = list_createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;
     }
@@ -27,8 +43,12 @@ int list_insertAtHead(List_Node **head, Data data) {
     return SUCCESS;
 }
 
-// Function to insert a node at the tail of the list
+// Function to insert a node at the tail of the list without duplicates
 int list_insertAtTail(List_Node **head, Data data) {
+    if (list_studentNumberExists(*head, data.student_number)) {
+        return ERROR_DUPLICATE_STUDENT_NUMBER;
+    }
+
     List_Node* newNode = list_createNode(data);
     if (newNode == NULL) {
         return ERROR_MEMORY_ALLOCATION_FAILED;

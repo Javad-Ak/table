@@ -15,6 +15,7 @@
 #define ERROR_MEMORY_ALLOCATION_FAILED -1
 #define ERROR_NODE_NOT_FOUND -2
 #define ERROR_LIST_EMPTY -3
+#define ERROR_DUPLICATE_STUDENT_NUMBER -4
 
 // Define the structure for data that will be stored in each node
 typedef struct Data {
