@@ -1,2 +1,2 @@
 # table
-Table DS in C (AUT-CE DSA project)
+AUT-CE DSA project
